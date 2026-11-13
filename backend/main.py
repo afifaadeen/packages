@@ -20,12 +20,10 @@ class Package(BaseModel):
     destination: str
     weight: int
 
-
 class UpdatePackage(BaseModel):
-    name: str
-    destination: str
-    weight: int
-
+    name: str = None
+    destination: str = None
+    weight: int = None
 
 class DispatchBatch(BaseModel):
     destination: str
@@ -47,7 +45,7 @@ class RegisterUser(BaseModel):
 # E1 - REGISTER PACKAGE
 @app.post("/packages")
 def register_package(package: Package,token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")
@@ -62,7 +60,7 @@ def register_package(package: Package,token=Header(None)):
 # E2 - GET PACKAGE
 @app.get("/packages/{package_id}")
 def get_package_details(package_id: int,token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")
@@ -73,7 +71,7 @@ def get_package_details(package_id: int,token=Header(None)):
 # E3 - UPDATE PACKAGE
 @app.patch("/packages/{package_id}")
 def update_package_details(package_id: int,package: UpdatePackage,token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")
@@ -89,7 +87,7 @@ def update_package_details(package_id: int,package: UpdatePackage,token=Header(N
 # E4 - DELETE PACKAGE
 @app.delete("/packages/{package_id}")
 def delete_package(package_id: int,token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")
@@ -100,7 +98,7 @@ def delete_package(package_id: int,token=Header(None)):
 # E5 - SEARCH PACKAGE
 @app.get("/packages")
 def search_package(destination: str = None,status: str = None,arrival_date: str = None,token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")
@@ -114,7 +112,7 @@ def search_package(destination: str = None,status: str = None,arrival_date: str 
 # E6 - VIEW DISPATCH BATCHES
 @app.get("/dispatch-batches")
 def view_dispatchBatches(destination: str = None,vehicle_number: int = None,dispatch_status: str = None,token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")
@@ -128,7 +126,7 @@ def view_dispatchBatches(destination: str = None,vehicle_number: int = None,disp
 # E7 - WAREHOUSE SUMMARY
 @app.get("/warehouse/summary")
 def warehouse_summary(token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")
@@ -139,7 +137,7 @@ def warehouse_summary(token=Header(None)):
 # E8 - CREATE DISPATCH BATCH
 @app.post("/dispatch-batches")
 def add_dispatch(dispatch: DispatchBatch,token=Header(None)):
-    username = function.verify_token(token=token)
+    username = function.verify_token(token=token,token_type="access")
 
     if not username:
         raise HTTPException(status_code=401,detail="Invalid or Expired token")

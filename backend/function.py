@@ -262,19 +262,22 @@ def verify_login(username, password):
     refresh_token = create_token(username=username, token_type="refresh")
     return {"access_token": access_token, "refresh_token": refresh_token}
     
-
-
 def create_token(username, token_type):
-    time = REFRESH_TOKEN_EXPIRY
     if token_type == "refresh":
         time = REFRESH_TOKEN_EXPIRY
-    payload={
+    else:
+        time = ACCESS_TOKEN_EXPIRY
+
+    payload = {
         "username": username,
         "token_type": token_type,
-        "exp": datetime.now(timezone.utc)+timedelta(minutes = time)   
-        }
-    token = jwt.encode(payload = payload , key = SECRET_KEY, algorithm=ALGORITHM)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=time)
+    }
+
+    token = jwt.encode(payload=payload,key=SECRET_KEY,algorithm=ALGORITHM)
+
     return token
+
 
 def verify_token(token, token_type):
     try:
